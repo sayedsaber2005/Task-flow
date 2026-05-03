@@ -1,0 +1,9 @@
+﻿//logout
+//reject project manager
+//createdBy in Get all projects & getMyProjects
+//add discription in update project
+project manager cannot change task status
+//username in get project members by project id
+send notifications to all the team memebers when update a task
+add user profile
+//admin can add, remove, change role of a user

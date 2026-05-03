@@ -1,0 +1,75 @@
+﻿🔴 Admin Approval System
+
+📌 requirement:
+
+Admin can accept/reject Project Managers
+
+❌ لسه ما عملتيش:
+
+User Status (Pending / Approved / Rejected)
+Endpoint:
+approve user
+reject user
+
+-------------------------------------------------------------------------
+
+2️⃣ 🔴 Notifications (مهم جدًا)
+
+📌 requirement:
+
+Team members receive notifications
+
+❌ لسه:
+
+Create notification table (عندك بس مش مستخدم)
+Trigger لما:
+task assigned
+task updated
+
+-------------------------------------------------------------------------
+
+
+3️⃣ 🔴 Real-time (Sockets / SignalR) ⭐
+
+📌 requirement:
+
+You must use real-time sockets
+
+❌ لسه خالص
+
+محتاجين:
+
+SignalR Hub
+لما:
+task يتغير
+comment يتضاف
+notification تتبعت
+
+👉 دي أهم نقطة ناقصة
+
+-------------------------------------------------------------------------
+
+
+4️⃣ 🟡 Project Statistics
+
+📌 requirement:
+
+PM can view progress stats
+
+❌ لسه:
+
+مثلاً:
+
+عدد tasks
+done vs pending
+progress %
+
+-------------------------------------------------------------------------
+
+5️⃣ 🟡 Authorization polishing
+
+إنتي بدأتيه 👏 بس لسه:
+
+Admin full access
+PM بس على projects بتاعته
+TeamMember بس assigned tasks
