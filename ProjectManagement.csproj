@@ -51,7 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <Folder Include="Migrations2\" />
     <Folder Include="obj\Debug\net10.0\staticwebassets\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>

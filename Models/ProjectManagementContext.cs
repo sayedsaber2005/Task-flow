@@ -64,7 +64,8 @@ public partial class ProjectManagementContext : IdentityDbContext<ApplicationUse
 
             entity.HasOne(d => d.Task).WithMany()
                 .HasForeignKey(d => d.TaskId)
-                .HasConstraintName("FK__Attachmen__TaskI__4CA06362");
+                .HasConstraintName("FK__Attachmen__TaskI__4CA06362")
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.UploadedByNavigation).WithMany()
                 .HasForeignKey(d => d.UploadedBy)
@@ -80,7 +81,8 @@ public partial class ProjectManagementContext : IdentityDbContext<ApplicationUse
 
             entity.HasOne(d => d.Task).WithMany()
                 .HasForeignKey(d => d.TaskId)
-                .HasConstraintName("FK__Comments__TaskId__4AB81AF0");
+                .HasConstraintName("FK__Comments__TaskId__4AB81AF0")
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(d => d.User).WithMany()
                 .HasForeignKey(d => d.UserId)
@@ -151,7 +153,8 @@ public partial class ProjectManagementContext : IdentityDbContext<ApplicationUse
 
             entity.HasOne(d => d.Project).WithMany(p => p.TbTasks)
                 .HasForeignKey(d => d.ProjectId)
-                .HasConstraintName("FK__Tasks__ProjectId__47DBAE45");
+                .HasConstraintName("FK__Tasks__ProjectId__47DBAE45")
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<TbTaskHistory>(entity =>
