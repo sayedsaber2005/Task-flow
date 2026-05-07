@@ -39,5 +39,19 @@ namespace ProjectManagement.Repositories.Implementations
             _context.SaveChanges();
         }
 
+        public IEnumerable<TbAttachment> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public TbAttachment GetById(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(TbAttachment entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

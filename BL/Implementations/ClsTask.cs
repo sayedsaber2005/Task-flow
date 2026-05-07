@@ -41,7 +41,7 @@ namespace ProjectManagement.BL.Implementations
             var result = new ApiResponse();
             try
             {
-                var tasks = _repo.GetAll(query);
+                var tasks = _repo.GetAll();
 
                 result.Data = tasks.Select(t => new TasksDTO
                 {

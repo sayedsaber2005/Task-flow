@@ -61,7 +61,7 @@ namespace ProjectManagement.BL.Implementations
                     Name = u.FirstName + " " + u.LastName,
                     Role = _userManager.GetRolesAsync(u).Result.FirstOrDefault(),
                     Status = u.Status
-                }).ToList(),
+                }).Where(u => u.Status != "Deleted" && u.Role != "Admin").ToList(),
                 StatusCode = "200"
             };
         }
@@ -648,7 +648,7 @@ namespace ProjectManagement.BL.Implementations
             var totalProjects = _projectRepo.GetAll().Count();
 
             // Tasks
-            var tasks = _taskRepo.GetAll(new TaskQueryDTO());
+            var tasks = _taskRepo.GetAll();
             var totalTasks = tasks.Count();
 
             var doneTasks = tasks.Count(t => t.Status == "done");

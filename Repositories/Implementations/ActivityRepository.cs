@@ -37,5 +37,30 @@ namespace ProjectManagement.Repositories.Implementations
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
         }
+
+        public IEnumerable<TbActivityLog> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public TbActivityLog GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TbActivityLog GetById(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(TbActivityLog entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(TbActivityLog entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -40,5 +40,20 @@ namespace ProjectManagement.Repositories.Implementations
         {
             _context.SaveChanges();
         }
+
+        public IEnumerable<TbComment> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public TbComment GetById(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(TbComment entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

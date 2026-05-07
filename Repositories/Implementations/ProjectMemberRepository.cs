@@ -68,5 +68,25 @@ namespace ProjectManagement.Repositories.Implementations
 
             return user;
         }
+
+        public IEnumerable<TbProjectMember> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public TbProjectMember GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TbProjectMember GetById(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(TbProjectMember entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -2,9 +2,9 @@
 
 namespace ProjectManagement.Repositories.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IGenericRepository<ApplicationUser>
     {
-        List<ApplicationUser> GetAll();
+        //List<ApplicationUser> GetAll();
         ApplicationUser GetByEmail(string email);
     }
 }

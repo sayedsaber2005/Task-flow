@@ -3,16 +3,16 @@ using ProjectManagement.Models;
 
 namespace ProjectManagement.Repositories.Interfaces
 {
-    public interface ITaskRepository
+    public interface ITaskRepository : IGenericRepository<TbTask>
     {
-        List<TbTask> GetAll(TaskQueryDTO query);
-        TbTask GetById(int id);
+        //List<TbTask> GetAll(TaskQueryDTO query);
+        //TbTask GetById(int id);
         public List<TbTask> GetByProjectId(int id);
         List<TbTask> GetByUser(string userId);
         List<TbTask> GetTasksByUserId(string userId);
-        void Add(TbTask task);
-        void Update(TbTask task);
-        void Delete(TbTask task);
-        void Save();
+        //void Add(TbTask task);
+        //void Update(TbTask task);
+        //void Delete(TbTask task);
+        //void Save();
     }
 }

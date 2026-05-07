@@ -17,32 +17,13 @@ namespace ProjectManagement.Repositories.Implementations
             _projectRepo = projectRepo;
         }
 
-        public List<TbTask> GetAll(TaskQueryDTO query)
+        public IEnumerable<TbTask> GetAll()
         {
-            //var tasks = _context.TbTasks.Include(t => t.AssignedToNavigation);
             var tasks = _context.TbTasks
                 .Include(t => t.AssignedToNavigation)
                 .ToList();
 
             return tasks;
-
-            //// Filtering
-            //if (!string.IsNullOrEmpty(query.Status))
-            //{
-            //    tasks = tasks.Where(t => t.Status == query.Status);
-            //}
-
-            //if (!string.IsNullOrEmpty(query.Priority))
-            //{
-            //    tasks = tasks.Where(t => t.Priority == query.Priority);
-            //}
-
-            //// Pagination
-            //tasks = tasks
-            //    .Skip((query.Page - 1) * query.PageSize)
-            //    .Take(query.PageSize);
-
-            //return tasks.ToList();
         }
 
         public TbTask GetById(int id)
@@ -89,6 +70,11 @@ namespace ProjectManagement.Repositories.Implementations
                 .Where(t => t.AssignedTo == userId)
                 .Include(t => t.AssignedToNavigation)
                 .ToList();
+        }
+
+        public TbTask GetById(string id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
