@@ -14,7 +14,7 @@ namespace ProjectManagement.Repositories.Implementations
             _context = context;
         }
 
-        public List<TbProject> GetAll()
+        public IEnumerable<TbProject> GetAll()
         {
             return _context.TbProjects
                 .Include(p => p.TbProjectMembers)
@@ -54,6 +54,8 @@ namespace ProjectManagement.Repositories.Implementations
 
         public void Delete(TbProject project)
         {
+            var tasks = _context.TbTasks.Where(t => t.ProjectId == project.Id).ToList();
+            _context.TbTasks.RemoveRange(tasks);
             _context.TbProjects.Remove(project);
         }
 
@@ -77,6 +79,11 @@ namespace ProjectManagement.Repositories.Implementations
                 .Include(t => t.AssignedToNavigation)
                 .Where(t => t.ProjectId == projectId)
                 .ToList();
+        }
+
+        public TbProject GetById(string id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

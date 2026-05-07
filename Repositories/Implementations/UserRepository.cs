@@ -13,7 +13,7 @@ namespace ProjectManagement.Repositories.Implementations
         }
 
         // get all users
-        public List<ApplicationUser> GetAll()
+        public IEnumerable<ApplicationUser> GetAll()
         {
             return _context.Users.ToList();
         }
@@ -26,6 +26,31 @@ namespace ProjectManagement.Repositories.Implementations
         public ApplicationUser GetByEmail(string email)
         {
             return _context.Users.FirstOrDefault(u => u.Email == email);
+        }
+
+        public ApplicationUser GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(ApplicationUser entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(ApplicationUser entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(ApplicationUser entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save()
+        {
+            throw new NotImplementedException();
         }
     }
 }
