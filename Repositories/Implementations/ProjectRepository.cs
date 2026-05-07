@@ -54,8 +54,6 @@ namespace ProjectManagement.Repositories.Implementations
 
         public void Delete(TbProject project)
         {
-            var tasks = _context.TbTasks.Where(t => t.ProjectId == project.Id).ToList();
-            _context.TbTasks.RemoveRange(tasks);
             _context.TbProjects.Remove(project);
         }
 

@@ -64,7 +64,7 @@ namespace ProjectManagement.Controllers
             return StatusCode(int.Parse(result.StatusCode), result);
         }
 
-        [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Admin, Project Manager")]
         [HttpPost]
         public IActionResult Create([FromBody] CreateProjectDTO dto)
         {
