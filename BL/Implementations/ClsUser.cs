@@ -556,10 +556,14 @@ namespace ProjectManagement.BL.Implementations
 
             if (!Directory.Exists(uploadsFolder))
                 Directory.CreateDirectory(uploadsFolder);
-            else
+
+            // delete only this user's old image
+            if (!string.IsNullOrEmpty(user.ProfileImageUrl))
             {
-                //Directory.Delete(uploadsFolder, true); // delete old images
-                Directory.CreateDirectory(uploadsFolder);
+                var oldFileName = Path.GetFileName(user.ProfileImageUrl);
+                var oldPath = Path.Combine(uploadsFolder, oldFileName);
+                if (File.Exists(oldPath))
+                    File.Delete(oldPath);
             }
 
             var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
