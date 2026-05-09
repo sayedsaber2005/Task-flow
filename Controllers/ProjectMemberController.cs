@@ -21,7 +21,7 @@ namespace ProjectManagement.Controllers
             _projectMemberBL = projectMemberBL;
         }
 
-        [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Admin, Project Manager")]
         [HttpPost ("add-member")]
         public IActionResult AddMember([FromBody] AddMemberDTO dto)
         {
@@ -29,7 +29,7 @@ namespace ProjectManagement.Controllers
             return StatusCode(int.Parse(result.StatusCode), result);
         }
 
-        [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Admin, Project Manager")]
         [HttpGet("{projectId}")]
         public IActionResult GetMembers(int projectId)
         {

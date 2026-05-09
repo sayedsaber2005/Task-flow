@@ -26,7 +26,8 @@ namespace ProjectManagement.BL.Implementations
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName)
+                new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
+                //new Claim("imageUrl", user.ProfileImageUrl ?? "")
             };
 
             var roles = await _userManager.GetRolesAsync(user);

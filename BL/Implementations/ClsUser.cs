@@ -164,7 +164,8 @@ namespace ProjectManagement.BL.Implementations
                 {
                     token = token,
                     userId = user.Id,
-                    email = user.Email
+                    email = user.Email,
+                    profileImageUrl = user.ProfileImageUrl,
                 },
                 StatusCode = "200"
             };
@@ -458,7 +459,8 @@ namespace ProjectManagement.BL.Implementations
                     Email = user.Email,
                     Name = user.FirstName + " " + user.LastName,
                     Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault(),
-                    Status = user.Status
+                    Status = user.Status,
+                    ProfileImageUrl = user.ProfileImageUrl
                 },
                 StatusCode = "200"
             };
@@ -556,7 +558,7 @@ namespace ProjectManagement.BL.Implementations
                 Directory.CreateDirectory(uploadsFolder);
             else
             {
-                Directory.Delete(uploadsFolder, true); // delete old images
+                //Directory.Delete(uploadsFolder, true); // delete old images
                 Directory.CreateDirectory(uploadsFolder);
             }
 
@@ -638,6 +640,8 @@ namespace ProjectManagement.BL.Implementations
             // Users
             var users = _userManager.Users.ToList();
             var totalUsers = users.Count;
+            var activeUsers = users
+                .Count(u => u.LastActiveAt >= DateTime.UtcNow.AddDays(-7));
 
             var projectManagers = await _userManager.GetUsersInRoleAsync("Project Manager");
 
@@ -661,6 +665,7 @@ namespace ProjectManagement.BL.Implementations
             result.Data = new AdminDashboardDTO
             {
                 TotalUsers = totalUsers,
+                ActiveUsers = activeUsers,
                 TotalProjects = totalProjects,
                 TotalTasks = totalTasks,
 

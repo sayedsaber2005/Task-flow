@@ -1,16 +1,36 @@
-// private readonly RequestDelegate _next;
+﻿using Microsoft.AspNetCore.Identity;
+using ProjectManagement.Models;
+using System.Security.Claims;
 
-// public UserActivityMiddleware(RequestDelegate next)
-// {
-//     _next = next;
-// }
+namespace ProjectManagement.BL.Implementations
+{
+    public class UserActivityMiddleware
+    {
+        private readonly RequestDelegate _next;
 
-// public async Task InvokeAsync(HttpContext context, UserManager<ApplicationUser> userManager)
-// {
-//     if(!context.User.Identity.IsAuthenticated)
-//     {
-//         throw new Exception("you're not authenticated, buddy");
-//     }
+        public UserActivityMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
 
-//     await _next(context);
-// }
+        public async Task InvokeAsync(HttpContext context, UserManager<ApplicationUser> userManager)
+        {
+            if (context.User.Identity.IsAuthenticated)
+            {
+                var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var user = await userManager.FindByIdAsync(userId);
+                    if (user != null)
+                    {
+                        user.LastActiveAt = DateTime.UtcNow;
+                        await userManager.UpdateAsync(user);
+                    }
+                }
+            }
+
+            await _next(context);
+        }
+    }
+}

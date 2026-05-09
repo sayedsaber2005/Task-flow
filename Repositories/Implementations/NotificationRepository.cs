@@ -1,5 +1,6 @@
 ﻿using ProjectManagement.Models;
 using ProjectManagement.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProjectManagement.Repositories.Implementations
 {
@@ -12,21 +13,35 @@ namespace ProjectManagement.Repositories.Implementations
             _context = context;
         }
 
-        public void Add(TbNotification notification)
+        public async Task AddAsync(TbNotification notification)
         {
-            _context.TbNotifications.Add(notification);
+            await _context.TbNotifications.AddAsync(notification);
         }
 
-        public IEnumerable<TbNotification> GetByUserId(string userId)
+        public async Task<List<TbNotification>> GetUserNotificationsAsync(string userId)
         {
-            return _context.TbNotifications
+            return await _context.TbNotifications
                 .Where(n => n.UserId == userId)
-                .ToList();
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
         }
 
-        public void Save()
+        public async Task<TbNotification?> GetByIdAsync(int id)
         {
-            _context.SaveChanges();
+            return await _context.TbNotifications
+                .FirstOrDefaultAsync(n => n.Id == id);
         }
+
+        public async Task<int> GetUnreadCountAsync(string userId)
+        {
+            return await _context.TbNotifications
+                .CountAsync(n => n.UserId == userId && !n.IsRead);
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
     }
 }
