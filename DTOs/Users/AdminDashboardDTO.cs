@@ -3,6 +3,7 @@
     public class AdminDashboardDTO
     {
         public int TotalUsers { get; set; }
+        public int ActiveUsers { get; set; }
         public int TotalProjects { get; set; }
         public int TotalTasks { get; set; }
 

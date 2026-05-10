@@ -47,7 +47,7 @@ namespace ProjectManagement.Controllers
 
         // POST api/<TaskController>
         [HttpPost]
-        [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Admin, Project Manager")]
         public async Task<IActionResult> Post([FromBody] CreateTaskDTO task)
         {
             if (!ModelState.IsValid)
@@ -92,7 +92,7 @@ namespace ProjectManagement.Controllers
             return StatusCode(int.Parse(response.StatusCode), response);
         }
 
-        [Authorize(Roles = "Project Manager")]
+        [Authorize(Roles = "Admin, Project Manager")]
         [HttpPost("assign")]
         public async Task<IActionResult> AssignTask([FromBody] AssignTaskDTO dto)
         {

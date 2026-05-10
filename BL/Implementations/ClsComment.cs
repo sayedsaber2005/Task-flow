@@ -2,6 +2,7 @@
 using ProjectManagement.BL.Interfaces;
 using ProjectManagement.DTOs;
 using ProjectManagement.DTOs.Comments;
+using ProjectManagement.DTOs.Notifications;
 using ProjectManagement.Hubs;
 using ProjectManagement.Models;
 using ProjectManagement.Repositories.Interfaces;
@@ -14,6 +15,7 @@ namespace ProjectManagement.BL.Implementations
         private readonly ICommentRepository _repo;
         private readonly IHubContext<NotificationHub> _hub;
         private readonly INotificationRepository _notificationRepo;
+        private readonly INotification _notificationBL;
         private readonly IHttpContextAccessor _httpContext;
         private readonly ITaskRepository _taskRepo;
         private readonly IProjectMemberRepository _projectMemberRepo;
@@ -21,6 +23,7 @@ namespace ProjectManagement.BL.Implementations
         public ClsComment(ICommentRepository repo, 
             IHubContext<NotificationHub> hub, 
             INotificationRepository notificationRepo,
+            INotification notificationBL,
             IHttpContextAccessor httpContext,
             ITaskRepository taskRepo,
             IProjectMemberRepository projectMemberRepo)
@@ -28,6 +31,7 @@ namespace ProjectManagement.BL.Implementations
             _repo = repo;
             _hub = hub;
             _notificationRepo = notificationRepo;
+            _notificationBL = notificationBL;
             _httpContext = httpContext;
             _projectMemberRepo = projectMemberRepo;
             _taskRepo = taskRepo;
@@ -83,7 +87,8 @@ namespace ProjectManagement.BL.Implementations
                 _repo.Save();
 
                 // Build notification
-                var message = $"{userId} commented on task '{task.Title}'";
+                var userName = _httpContext.HttpContext.User.Identity.Name ?? "Someone";
+                var message = $"{userName} commented on task '{task.Title}'";
 
                 var members = _projectMemberRepo.GetByProjectId((int)task.ProjectId);
 
@@ -91,26 +96,32 @@ namespace ProjectManagement.BL.Implementations
                 {
                     if (member.UserId == userId) continue;
 
-                    var notification = new TbNotification
+                    await _notificationBL.SendNotificationAsync(
+                    new CreateNotificationDTO
                     {
                         UserId = member.UserId,
                         Message = message,
-                        Type = NotificationTypes.Comment,
-                        CreatedAt = DateTime.UtcNow
-                    };
+                        Type = "Task"
+                    });
 
-                    _notificationRepo.Add(notification);
+                    //var notification = new TbNotification
+                    //{
+                    //    UserId = member.UserId,
+                    //    Message = message,
+                    //    Type = NotificationTypes.Comment,
+                    //    CreatedAt = DateTime.UtcNow
+                    //};
 
-                    await _hub.Clients.User(member.UserId)
-                        .SendAsync("ReceiveNotification", new
-                        {
-                            Message = message,
-                            Type = "comment",
-                            TaskId = task.Id
-                        });
+                    //_notificationRepo.Add(notification);
+
+                    //await _hub.Clients.User(member.UserId)
+                    //    .SendAsync("ReceiveNotification", new
+                    //    {
+                    //        Message = message,
+                    //        Type = "comment",
+                    //        TaskId = task.Id
+                    //    });
                 }
-
-                _notificationRepo.Save();
 
                 result.Data = new CommentDTO
                 {

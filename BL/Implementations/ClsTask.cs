@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using ProjectManagement.BL.Interfaces;
 using ProjectManagement.DTOs;
+using ProjectManagement.DTOs.Notifications;
 using ProjectManagement.DTOs.TaskHistory;
 using ProjectManagement.DTOs.Tasks;
 using ProjectManagement.Hubs;
@@ -18,6 +19,7 @@ namespace ProjectManagement.BL.Implementations
         private readonly IHttpContextAccessor _httpContext;
         private readonly IHubContext<NotificationHub> _hub;
         private readonly INotificationRepository _notificationRepo;
+        private readonly INotification _notificationBL;
         private readonly IActivity _activity;
         private readonly IUserRepository _userRepo;
         public ClsTask(ITaskRepository repo, ITaskHistory history,
@@ -25,6 +27,7 @@ namespace ProjectManagement.BL.Implementations
             IProjectMemberRepository projectMemberRepo,
             IHubContext<NotificationHub> hub,
             INotificationRepository notificationRepo,
+            INotification notificationBL,
             IActivity activity)
         {
             _repo = repo;
@@ -33,6 +36,7 @@ namespace ProjectManagement.BL.Implementations
             _projectMemberRepo = projectMemberRepo;
             _hub = hub;
             _notificationRepo = notificationRepo;
+            _notificationBL = notificationBL;
             _activity = activity;
         }
 
@@ -458,41 +462,50 @@ namespace ProjectManagement.BL.Implementations
             };
         }
 
+        private async Task SendRealtimeNotification(string userId, string message)
+        {
+            await _hub.Clients.User(userId)
+                .SendAsync("ReceiveNotification", new
+                {
+                    Message = message,
+                    Type = "task"
+                });
+        }
+
         private async Task SendRealtimeNotification(string userId, string message, int taskId, int projectId)
         {
-            //await _hub.Clients.User(userId)
-            //    .SendAsync("ReceiveNotification", new
-            //    {
-            //        Message = message,
-            //        TaskId = taskId
-            //    });
-
             var members = _projectMemberRepo.GetByProjectId(projectId);
 
             foreach (var member in members)
             {
                 if (member.UserId == userId) continue;
 
-                var notification = new TbNotification
-                {
-                    UserId = member.UserId,
-                    Message = message,
-                    Type = NotificationTypes.Task,
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                _notificationRepo.Add(notification);
-
-                await _hub.Clients.User(member.UserId)
-                    .SendAsync("ReceiveNotification", new
+                await _notificationBL.SendNotificationAsync(
+                    new CreateNotificationDTO
                     {
+                        UserId = member.UserId,
                         Message = message,
-                        Type = "task",
-                        TaskId = taskId
+                        Type = "Task"
                     });
-            }
 
-            _notificationRepo.Save();
+                //var notification = new TbNotification
+                //{
+                //    UserId = member.UserId,
+                //    Message = message,
+                //    Type = NotificationTypes.Task,
+                //    CreatedAt = DateTime.UtcNow
+                //};
+
+                //_notificationRepo.Add(notification);
+
+                //await _hub.Clients.User(member.UserId)
+                //    .SendAsync("ReceiveNotification", new
+                //    {
+                //        Message = message,
+                //        Type = "task",
+                //        TaskId = taskId
+                //    });
+            }
         }
 
         private string BuildUpdateMessage(dynamic task, UpdateTaskDTO dto)
@@ -556,6 +569,8 @@ namespace ProjectManagement.BL.Implementations
 
                 // send real-time
                 await SendRealtimeNotification(userId, message, task.Id, (int)task.ProjectId);
+
+
 
                 result.Data = MapToDTO(task);
                 result.StatusCode = "200";
@@ -669,7 +684,7 @@ namespace ProjectManagement.BL.Implementations
 
                 // check permission (only PM or Admin)
 
-                if (!user.IsInRole("Project Manager"))
+                if (!user.IsInRole("Project Manager") && !user.IsInRole("Admin"))
                 {
                     result.StatusCode = "403";
                     result.Errors.Add(new { Message = "Not allowed to assign tasks" });
@@ -716,13 +731,21 @@ namespace ProjectManagement.BL.Implementations
                 SaveHistory(changes);
 
                 // save notification in DB
-                var message = $"You have been assigned a new task: {task.Title}";
+                //var message = $"You have been assigned a new task: {task.Title}";
 
-                var notification = BuildNotification(task, message);
-                _notificationRepo.Add(notification);
-                _notificationRepo.Save();
+                //var notification = BuildNotification(task, message);
+                //_notificationRepo.Add(notification);
+                //_notificationRepo.Save();
 
-                await SendRealtimeNotification(dto.AssignedTo, message, task.Id, (int)task.ProjectId);
+                //await SendRealtimeNotification(dto.AssignedTo, message);
+
+                await _notificationBL.SendNotificationAsync(
+                    new CreateNotificationDTO
+                    {
+                        UserId = dto.AssignedTo,
+                        Message = $"You were assigned task: {task.Title}",
+                        Type = "Task"
+                    });
 
                 _repo.Update(task);
                 _repo.Save();

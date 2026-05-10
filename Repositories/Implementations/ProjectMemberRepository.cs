@@ -24,6 +24,7 @@ namespace ProjectManagement.Repositories.Implementations
 
         public TbProjectMember GetByUserAndProject(string userId, int projectId)
             => _context.TbProjectMembers
+                .Include(m => m.User)
                 .FirstOrDefault(m => m.UserId == userId && m.ProjectId == projectId);
 
         public List<TbProjectMember> GetByUser(string userId)
